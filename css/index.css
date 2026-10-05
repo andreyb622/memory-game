@@ -12,6 +12,15 @@ body {
   padding: 10px;
 }
 
+.main {
+  width: fit-content;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
 .btn {
   height: 40px;
   padding: 0 10px;
@@ -24,4 +33,19 @@ body {
 
 .btn:hover {
   background-color: var(--secondary-color);
+}
+
+.card {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+}
+
+.card.hidden > .card__content {
+  display: none;
 }
