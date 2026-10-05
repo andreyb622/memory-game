@@ -46,6 +46,14 @@ body {
   border-radius: 5px;
 }
 
+.card__content {
+  font-size: 26px;
+}
+
 .card.hidden > .card__content {
   display: none;
+}
+
+.card.opened {
+  background-color: rgba(103, 239, 121, 0.562);
 }
