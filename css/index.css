@@ -57,3 +57,20 @@ body {
 .card.opened {
   background-color: rgba(103, 239, 121, 0.562);
 }
+
+.win-dialog {
+  margin: auto;
+  border: none;
+  border-radius: 12px;
+}
+
+.win-dialog__wrapper {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+}
+
+.win-dialog::backdrop {
+  background: rgb(30 20 60 / 0.55);
+  backdrop-filter: blur(2px);
+}

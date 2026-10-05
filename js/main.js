@@ -2,17 +2,22 @@ window.addEventListener("DOMContentLoaded", (e) => {
   const body = document.body;
   const header = createHeader();
   const main = createElement("main", "main");
+  const winDialog = createWinDialog();
 
   body.append(header);
   body.append(main);
-
+  body.append(winDialog);
   renderDeck();
 });
 
 const state = {
   firstCard: null,
   isLocked: false,
+  stepsCount: 0,
+  openedCouplesCount: 0,
 };
+
+let winDialog = null;
 
 function createElement(tag, className, text = "") {
   const element = document.createElement(tag);
@@ -25,10 +30,18 @@ function createHeader() {
   const header = createElement("header", "header");
   const newGameBtn = createElement("button", "header__btn btn", "Start");
   const showResultsBtn = createElement("button", "header__btn btn", "Results");
+  const couplesContainer = createElement("div", "header__couples-container");
+  const currentOpenedCouples = createElement(
+    "span",
+    "header__opened-couples",
+    "0",
+  );
+  const totalCouples = createElement("span", "header__total-couples", "/8");
 
+  couplesContainer.append(currentOpenedCouples, totalCouples);
   newGameBtn.addEventListener("click", renderDeck);
 
-  header.append(newGameBtn, showResultsBtn);
+  header.append(newGameBtn, showResultsBtn, couplesContainer);
   return header;
 }
 
@@ -40,6 +53,14 @@ function closeCard(card) {
   card.classList.add("hidden");
 }
 
+function updateCurrentOpenedCouples() {
+  const currentOpenedCouples = document.querySelector(
+    ".header__opened-couples",
+  );
+
+  currentOpenedCouples.textContent = state.openedCouplesCount;
+}
+
 function handleCardClick(card) {
   if (state.isLocked) return;
   if (card.classList.contains("opened")) return;
@@ -48,6 +69,7 @@ function handleCardClick(card) {
 
   if (state.firstCard === null) {
     state.firstCard = card;
+
     return;
   }
 
@@ -55,15 +77,24 @@ function handleCardClick(card) {
 
   const firstCard = state.firstCard;
   const secondCard = card;
+  state.stepsCount += 1;
 
   if (firstCard.dataset.value === secondCard.dataset.value) {
     firstCard.classList.add("opened");
     secondCard.classList.add("opened");
+
     state.firstCard = null;
+    state.openedCouplesCount += 1;
+    updateCurrentOpenedCouples();
+    if (state.openedCouplesCount === 2) {
+      updateStepsCount();
+      winDialog.showModal();
+    }
     return;
   }
 
   state.isLocked = true;
+
   setTimeout(() => {
     closeCard(firstCard);
     closeCard(secondCard);
@@ -107,4 +138,39 @@ function renderDeck() {
   for (let i = 0; i < deck.length; i += 1) {
     main.append(createCard(deck[i]));
   }
+  resetState();
+}
+
+function resetState() {
+  state.firstCard = null;
+  state.isLocked = false;
+  state.stepsCount = 0;
+  state.openedCouplesCount = 0;
+  updateCurrentOpenedCouples();
+  updateStepsCount();
+}
+
+function createWinDialog() {
+  winDialog = document.createElement("dialog");
+  winDialog.className = "win-dialog";
+
+  const wrapper = createElement("div", "win-dialog__wrapper");
+
+  const title = createElement("h2", "dialog__title", "You win!");
+  const text = createElement("p", "dialog__text");
+  const closeBtn = createElement("button", "btn", "start new game");
+
+  closeBtn.addEventListener("click", () => {
+    winDialog.close();
+    renderDeck();
+  });
+
+  wrapper.append(title, text, closeBtn);
+  winDialog.append(wrapper);
+  return winDialog;
+}
+
+function updateStepsCount() {
+  const stepsCount = document.querySelector(".dialog__text");
+  stepsCount.textContent = `You found all pairs in ${state.stepsCount} moves`;
 }
