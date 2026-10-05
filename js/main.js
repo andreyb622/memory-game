@@ -38,10 +38,16 @@ function createHeader() {
   );
   const totalCouples = createElement("span", "header__total-couples", "/8");
 
+  const stepsContainer = createElement("div", "header__steps-container");
+  const currentSteps = createElement("span", "header__steps-count", "0");
+  const stepsText = createElement("span", "header__steps-text", "moves: ");
+  stepsContainer.append(stepsText, currentSteps);
+
   couplesContainer.append(currentOpenedCouples, totalCouples);
+
   newGameBtn.addEventListener("click", renderDeck);
 
-  header.append(newGameBtn, showResultsBtn, couplesContainer);
+  header.append(newGameBtn, showResultsBtn, couplesContainer, stepsContainer);
   return header;
 }
 
@@ -78,6 +84,7 @@ function handleCardClick(card) {
   const firstCard = state.firstCard;
   const secondCard = card;
   state.stepsCount += 1;
+  updateStepsCount();
 
   if (firstCard.dataset.value === secondCard.dataset.value) {
     firstCard.classList.add("opened");
@@ -86,8 +93,7 @@ function handleCardClick(card) {
     state.firstCard = null;
     state.openedCouplesCount += 1;
     updateCurrentOpenedCouples();
-    if (state.openedCouplesCount === 2) {
-      updateStepsCount();
+    if (state.openedCouplesCount === 8) {
       winDialog.showModal();
     }
     return;
@@ -171,6 +177,8 @@ function createWinDialog() {
 }
 
 function updateStepsCount() {
+  const currentSteps = document.querySelector(".header__steps-count");
+  currentSteps.textContent = state.stepsCount;
   const stepsCount = document.querySelector(".dialog__text");
   stepsCount.textContent = `You found all pairs in ${state.stepsCount} moves`;
 }
