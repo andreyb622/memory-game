@@ -70,6 +70,7 @@ function updateCurrentOpenedCouples() {
 function handleCardClick(card) {
   if (state.isLocked) return;
   if (card.classList.contains("opened")) return;
+  if (!card.classList.contains("hidden")) return;
 
   openCard(card);
 
