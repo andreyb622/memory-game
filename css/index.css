@@ -1,0 +1,27 @@
+@import "reset.css";
+@import "variables.css";
+
+body {
+  background-color: rgb(141, 133, 253);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.btn {
+  height: 40px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+}
